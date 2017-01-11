@@ -1,1 +1,1 @@
-#Some code of Ghastlcon.
+#Some code in SMZX.
