@@ -93,7 +93,7 @@ int main()
 
         SPFA();
         for(i = 1;i < n;i ++)
-            cout << (f[i][0] == INFINITE ? -1 : f[i][0]) << ' ';
+            cout << (d[i][0] == INFINITE ? -1 : d[i][0]) << ' ';
         cout << endl;
     }
     
