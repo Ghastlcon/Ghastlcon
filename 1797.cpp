@@ -3,7 +3,7 @@
 #include <cstdio>
 #include <cstring>
 #include <vector>
-#include <deque>
+#include <queue>
 #include <utility>
 #define N 50
 #define F 10
@@ -14,7 +14,7 @@ int n, f;
 int p[N][F];
 vector<pair<int, int> > e[F];
 
-deque<pair<int, int> > q;
+queue<pair<int, int> > q;
 int d[N][1 << F], u[N][1 << F];
 
 int Count(int x)
@@ -32,31 +32,32 @@ void SPFA()
     int i, j;
     pair<int, int> o;
 
-    q.clear();
+    while(!q.empty())
+        q.pop();
     memset(d, 0, sizeof(d));
     for(i = 0;i < n;i ++)
         for(j = 0;j < (1 << f);j ++)
             d[i][j] = INFINITE;
     d[0][0] = 0;
 
-    for(q.push_back(make_pair(0, 0));!q.empty();)
+    for(q.push(make_pair(0, 0));!q.empty();)
     {
         o = q.front();
-        q.pop_front();
+        q.pop();
 
         for(i = 0;i < f;i ++)
         {
             if(!(o.second & (1 << i)) && Count(o.second | (1 << i)) < 4 && d[o.first][o.second | (1 << i)] > p[o.first][i] + d[o.first][o.second])
             {
                 d[o.first][o.second | (1 << i)] = p[o.first][i] + d[o.first][o.second];
-                q.push_back(make_pair(o.first, o.second | (1 << i)));
+                q.push(make_pair(o.first, o.second | (1 << i)));
             }
             if(o.second & (1 << i))
                 for(j = 0;j < (signed)e[i].size();j ++)
                     if(e[i].at(j).first == o.first && d[e[i].at(j).second][o.second & (~(1 << i))] > d[o.first][o.second])
                     {
                         d[e[i].at(j).second][o.second & (~(1 << i))] = d[o.first][o.second];
-                        q.push_back(make_pair(e[i].at(j).second, o.second & (~(1 << i))));
+                        q.push(make_pair(e[i].at(j).second, o.second & (~(1 << i))));
                     }
         }
     }
@@ -92,12 +93,7 @@ int main()
 
         SPFA();
         for(i = 1;i < n;i ++)
-        {
-            for(j = 0, u = INFINITE;j < (1 << f);j ++)
-                if(Count(j) < 4)
-                    u = min(u, d[i][j]);
-            cout << (u == INFINITE ? -1 : u) << ' ';
-        }
+            cout << (f[i][0] == INFINITE ? -1 : f[i][0]) << ' ';
         cout << endl;
     }
     
